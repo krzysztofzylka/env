@@ -9,21 +9,23 @@ class Env
 
     /**
      * Env filepath
-     * @var string
+     * @var string|array
      */
-    private string $filePath;
+    private string|array $filePaths;
 
     /**
-     * Class Constructor
-     * @param string $path The path to the file that will be loaded
-     * @throws Exception If the file is not found
+     * Constructs a new instance of the class.
+     * @param string|array $paths The path(s) of the file(s) to be loaded.
+     * @throws Exception If any of the files specified in $paths do not exist.
      */
-    public function __construct(string $path)
+    public function __construct(string|array $paths)
     {
-        $this->filePath = realpath($path);
+        $this->filePaths = is_string($paths) ? [$paths] : $paths;
 
-        if (!$this->filePath || !file_exists($this->filePath)) {
-            throw new Exception('File not found', 404);
+        foreach ($this->filePaths as $path) {
+            if (!file_exists($path)) {
+                throw new Exception('File not found', 404);
+            }
         }
     }
 
@@ -33,20 +35,21 @@ class Env
      */
     public function load(): bool
     {
+        foreach ($this->filePaths as $filePath) {
+            $fileContents = file_get_contents($filePath);
 
-        $fileContents = file_get_contents($this->filePath);
+            if ($fileContents === false) {
+                return false;
+            }
 
-        if ($fileContents === false) {
-            return false;
+            $lines = explode(PHP_EOL, $fileContents);
+
+            foreach ($lines as $line) {
+                $this->processContent($line);
+            }
+
+            ksort($_ENV);
         }
-
-        $lines = explode(PHP_EOL, $fileContents);
-
-        foreach ($lines as $line) {
-            $this->processContent($line);
-        }
-
-        ksort($_ENV);
 
         return true;
     }
