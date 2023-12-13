@@ -12,6 +12,12 @@ $env = new \Krzysztofzylka\Env\Env('/path/to/env/file');
 $env->load();
 ```
 
+# Load multiple env file
+```php
+$env = new \Krzysztofzylka\Env\Env(['/path/to/env/file', '/path/to/env/file', ...]);
+$env->load();
+```
+
 ## Example ENV file content
 ```text
 DB_HOST=localhost
