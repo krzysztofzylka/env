@@ -88,20 +88,18 @@ class Env
     {
         if (str_starts_with($value, '"') && str_ends_with($value, '"') || str_starts_with($value, "'") && str_ends_with($value, "'")) {
             return substr($value, 1, -1);
-        } else {
-            if (preg_match("/^\d+$/", $value)) {
-                return (int)$value;
-            } elseif (preg_match("/^\d+\.\d+$/", $value)) {
-                return (float)$value;
-            }
-
-            return match (strtolower($value)) {
-                'false' => false,
-                'true' => true,
-                'null' => null,
-                default => $value,
-            };
+        } elseif (preg_match("/^\d+$/", $value)) {
+            return (int)$value;
+        } elseif (preg_match("/^\d+\.\d+$/", $value)) {
+            return (float)$value;
         }
+
+        return match (strtolower($value)) {
+            'false' => false,
+            'true' => true,
+            'null' => null,
+            default => $value,
+        };
     }
 
 }
