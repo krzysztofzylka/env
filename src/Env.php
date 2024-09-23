@@ -8,34 +8,40 @@ class Env
 {
 
     /**
-     * Env filepath
-     * @var string|array
+     * Loads environment variables from the system into the $_ENV array.
+     *
+     * This method iterates through all available environment variables
+     * retrieved from the getenv() function and assigns them to the $_ENV array.
+     * This is useful when we want to access environment variables globally
+     * in PHP scripts.
+     *
+     * @return bool Returns true if the operation was successful.
      */
-    private string|array $filePaths;
-
-    /**
-     * Constructs a new instance of the class.
-     * @param string|array $paths The path(s) of the file(s) to be loaded.
-     * @throws Exception If any of the files specified in $paths do not exist.
-     */
-    public function __construct(string|array $paths)
+    public function loadFromSystem(): bool
     {
-        $this->filePaths = is_string($paths) ? [$paths] : $paths;
-
-        foreach ($this->filePaths as $path) {
-            if (!file_exists($path)) {
-                throw new Exception('File not found', 404);
-            }
+        foreach (getenv() as $name => $value) {
+            $_ENV[$name] = $value;
         }
+
+        return true;
     }
 
     /**
      * Loads the contents of a file, processes the content, and sorts the environment variables.
      * @return bool Returns true if the file is successfully loaded and processed, false otherwise.
+     * @throws Exception
      */
-    public function load(): bool
+    public function loadFromFile(string|array $paths): bool
     {
-        foreach ($this->filePaths as $filePath) {
+        if (is_string($paths)) {
+            $paths = [$paths];
+        }
+
+        foreach ($paths as $filePath) {
+            if (!file_exists($filePath)) {
+                throw new Exception('File not found', 404);
+            }
+
             $fileContents = file_get_contents($filePath);
 
             if ($fileContents === false) {
