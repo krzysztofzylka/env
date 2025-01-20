@@ -92,6 +92,8 @@ class Env
      */
     private function parseValue(mixed $value): mixed
     {
+        $value = trim($value, ' \0');
+
         if (str_starts_with($value, '"') && str_ends_with($value, '"') || str_starts_with($value, "'") && str_ends_with($value, "'")) {
             return substr($value, 1, -1);
         } elseif (preg_match("/^\d+$/", $value)) {

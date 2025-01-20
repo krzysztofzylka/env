@@ -38,6 +38,9 @@ class EnvTest extends TestCase
         // test string value
         $this->assertSame('string', $method->invoke($this->env, "'string'"));
         $this->assertSame('string', $method->invoke($this->env, '"string"'));
+        $this->assertSame('string', $method->invoke($this->env, ' string'));
+        $this->assertSame('string', $method->invoke($this->env, ' "string"'));
+        $this->assertSame('string ', $method->invoke($this->env, '"string "'));
         // test boolean values
         $this->assertSame(false, $method->invoke($this->env, 'false'));
         $this->assertSame(true, $method->invoke($this->env, 'true'));
