@@ -19,9 +19,7 @@ class Env
      */
     public function loadFromSystem(): bool
     {
-        foreach (getenv() as $name => $value) {
-            $_ENV[$name] = $value;
-        }
+        $_ENV = array_merge($_ENV, getenv());
 
         return true;
     }
