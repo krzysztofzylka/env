@@ -67,7 +67,7 @@ class Env
     {
         $content = ltrim($content);
 
-        if (str_starts_with($content, '#') || empty($content)) {
+        if (preg_match('/^\s*(#|$)/', $content)) {
             return;
         }
 
