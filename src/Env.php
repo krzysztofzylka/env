@@ -92,12 +92,13 @@ class Env
     {
         $value = trim($value, ' \0');
 
-        if (str_starts_with($value, '"') && str_ends_with($value, '"') || str_starts_with($value, "'") && str_ends_with($value, "'")) {
+        if ((str_starts_with($value, '"') && str_ends_with($value, '"')) ||
+            (str_starts_with($value, "'") && str_ends_with($value, "'"))) {
             return substr($value, 1, -1);
-        } elseif (preg_match("/^\d+$/", $value)) {
-            return (int)$value;
-        } elseif (preg_match("/^\d+\.\d+$/", $value)) {
-            return (float)$value;
+        }
+
+        if (preg_match('/^\d+(\.\d+)?$/', $value)) {
+            return !str_contains($value, '.') ? (int)$value : (float)$value;
         }
 
         return match (strtolower($value)) {
