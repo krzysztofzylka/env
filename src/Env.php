@@ -90,7 +90,7 @@ class Env
      */
     private function parseValue(mixed $value): mixed
     {
-        $value = trim($value, ' \0');
+        $value = trim($value);
 
         if ((str_starts_with($value, '"') && str_ends_with($value, '"')) ||
             (str_starts_with($value, "'") && str_ends_with($value, "'"))) {
